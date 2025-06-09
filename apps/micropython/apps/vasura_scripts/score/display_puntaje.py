@@ -33,3 +33,6 @@ class DisplayPuntaje:
 
     def mostrar_medalla(self):
         self.medal.set_frame(11)
+
+    def ocultar_medalla(self):
+        self.medal.disable()

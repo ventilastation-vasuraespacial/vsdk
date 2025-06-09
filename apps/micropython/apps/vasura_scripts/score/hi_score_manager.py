@@ -6,6 +6,7 @@ class HiScoreManager:
     def __init__(self):
         #Eventos
         self.al_superar_hi_score : Evento = Evento()
+        self.al_insuperar_hi_score : Evento = Evento()
 
         #Config
         path_base = "./apps/vasura_files/"
@@ -42,11 +43,19 @@ class HiScoreManager:
 
         self.puntaje_jugadore = score
         self.jugadore_esta_en_ranking = score > self.hi_scores[-1]["puntaje"]
-        
-        if self.jugadore_esta_en_ranking and not self.hi_score_superado and score > self.hi_score_guardado:
-            self.al_superar_hi_score.disparar()
-            self.hi_score_superado = True
-    
+
+        if not self.jugadore_esta_en_ranking:
+            return
+
+        if not self.hi_score_superado:
+            if score > self.hi_score_guardado:
+                self.al_superar_hi_score.disparar()
+                self.hi_score_superado = True
+        elif score < self.hi_score_guardado:
+            self.al_insuperar_hi_score.disparar()
+            self.hi_score_superado = False
+
+
     def guardar_puntaje_actual(self, iniciales:str):
         if self.puntaje_jugadore < self.hi_scores[-1]["puntaje"]:
             return -1
@@ -107,3 +116,4 @@ class HiScoreManager:
     
     def limpiar(self):
         self.al_superar_hi_score.limpiar()
+        self.al_insuperar_hi_score.limpiar()
